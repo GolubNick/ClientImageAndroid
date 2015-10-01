@@ -44,7 +44,7 @@ import java.net.URL;
 public class MainActivity extends ActionBarActivity implements View.OnClickListener{
 
     Button choose, upload, download;
-    EditText editText;
+    EditText editText, urlServer;
     ImageView imageView;
     private String imagepath=null;
 
@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         download = (Button)findViewById(R.id.download);
         imageView = (ImageView)findViewById(R.id.imageview);
         editText = (EditText)findViewById(R.id.edittext);
+        urlServer = (EditText)findViewById(R.id.urlServer);
         choose.setOnClickListener(this);
         upload.setOnClickListener(this);
         download.setOnClickListener(this);
@@ -137,7 +138,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     public abstract class Upload extends AsyncTask<String, Void, String>{
-        String postReceiverUrl = "http://10.10.10.13:8080/upload";
+        String postReceiverUrl = urlServer.toString();
         String responseStr = null;
 
         @Override
@@ -148,7 +149,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 HttpPost httpPost = new HttpPost(postReceiverUrl);
                 File file = new File(textFile);
                 FileBody fileBody = new FileBody(file);
-                StringBody comment =  new StringBody(editText.getText().toString());
+                StringBody comment =  new StringBody("test");
                 MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 reqEntity.addPart("file", fileBody);
                 reqEntity.addPart("name", comment);
@@ -180,7 +181,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     void downloadFile(){
 
         try {
-            URL url = new URL("http://10.10.10.16:8080/files/df");
+            URL url = new URL(urlServer.toString());
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
             urlConnection.setRequestMethod("GET");
